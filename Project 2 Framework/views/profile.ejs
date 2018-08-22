@@ -1,0 +1,247 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <title>The Hitchhiker's Guide to the Galaxy of APIs</title>
+    <!-- Link outside styling -->
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.1.0/css/bootstrap.min.css" integrity="sha384-9gVQ4dYFwwWSjIDZnLEWnxCjeSWFphJiwGPXr1jddIhOegiu1FwO5qRGvFXOdJZ4"
+        crossorigin="anonymous">
+    <link rel="stylesheet" href="//netdna.bootstrapcdn.com/font-awesome/4.0.3/css/font-awesome.min.css">
+    <link rel="stylesheet" href="http://maxcdn.bootstrapcdn.com/bootstrap/3.2.0/css/bootstrap.min.css">
+    <link rel="stylesheet" href="http://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.2.0/css/font-awesome.min.css">
+    <!-- Link style sheets -->
+    <link rel="stylesheet" href="css/landing.css" />
+    <link rel="stylesheet" href="css/srating.css">
+    <!-- Link jQuery (must be linked before JS files) -->
+    <script type='text/javascript' src='https://cdnjs.cloudflare.com/ajax/libs/jquery/3.2.1/jquery.min.js'></script>
+    <!-- Link JS -->
+    <script src="js/click-ratings.js"></script>
+    <script src="js/modal/create.js"></script>
+    <script src="js/modal/add.js"></script>
+    <script src="js/srating/functions.js"></script>
+    <script src="js/srating/application.js"></script>
+    <script src="js/srating/save-ratings.js"></script>
+
+</head>
+
+<body>
+    <div class="container11">
+        <header id="header" class="alt">
+            <h1>Welcome to Our Community</h1>
+            <strong uid="<%= user.id %>">Exploring as user</strong>:
+            <%= user.id %>
+                <a></a>
+                <strong>Username</strong>:
+                <%= user.username %>
+                    <a></a>
+                    <a class="logout" href="/logout">
+                        <i>Logout</i>
+                    </a>
+        </header>
+
+        <!-- Banner -->
+        <section id="banner">
+            <h2>The Hitchhiker's Guide to the</h2>
+            <h2>Galaxy of APIs</h2>
+            <p></p>
+        </section>
+        <section class="table-wrapper">
+            <div>
+                <table class="table table-striped">
+                    <thead>
+                        <tr>
+                            <th scope="col"></th>
+                            <th scope="col">API</th>
+                            <th scope="col">Community Rating</th>
+                            <th scope="col">Your Rating</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <% for (var i=0; i<apis.length; i++) { %>
+                            <tr>
+                                <th align="center" class="num" scope="row">
+                                    <%= i+1 %>
+                                </th>
+                                <td align="center">
+                                    <a href="<%= apis[i].dataValues.link %>" target="_blank">
+                                        <%= apis[i].dataValues.name %>
+                                    </a>
+                                </td>
+
+                                <td align="center" id="avg-rating-<%= apis[i].dataValues.id %>">
+                                    <% if (apis[i].dataValues.rating) { %>
+                                            <%= apis[i].dataValues.rating %>	
+                                            &nbsp;
+                                            ( <%= apis[i].dataValues.numRatings %>
+
+                                            <% if (apis[i].dataValues.numRatings == 1) { %>
+                                                    rating )
+                                               <% } 
+                                               else { %> 
+                                                    ratings )
+                                               <% } %>
+                                            <% } 
+                                            
+                                       else { %>
+                                            Not Rated Yet
+                                     <% } %>
+                                </td>
+                                <!-- Stars displayed here -->
+                                <td>
+                                    <div class="scontainer" style="margin-top: 0px">
+                                        <div dbid="<%= apis[i].dataValues.id %>" class="srating" id="star<%= apis[i].id%>"></div>
+                                        <div>
+                                            <span class="vote-text" id="your-vote-was<%= apis[i].id %>">
+                                                <span id="vote<%= apis[i].id %>"></span>
+                                            </span>
+                                        </div>
+                                    </div>
+                                </td>
+                                <tr>
+                                    <% } %>
+                    </tbody>
+                </table>
+            </div>
+
+            <!-- Enter an API -->
+            <style>
+                .modal-content {
+                    background-color: #273338;
+                }
+
+                .close {
+                    color: red;
+                    opacity: 100;
+                }
+            </style>
+            <section id="three" class="wrapper style3 special">
+                <div class="inner">
+                    <header class="major narrow ">
+                        <h2>Add an API</h2>
+                        <p>for your next project</p>
+                    </header>
+                    <ul class="actions">
+                        <button id="myBtn">ADD</button>
+
+                        <!-- The Modal -->
+                        <div id="myModal" class="modal">
+
+                            <!-- Modal content -->
+                            <div class="modal-content">
+                                <span class="close">&times;</span>
+                                <h3 id="myModalLabel">We'd Love to Hear About This New API</h3>
+
+                                <div class="modal-body">
+                                    <form class="form-horizontal col-sm-12">
+                                        <div class="form-group">
+                                            <label>Name</label>
+                                            <input id="modal-name" class="form-control required" placeholder="API Name" data-placement="top" data-trigger="manual" data-content="Must be at least 3 characters long, and must only contain letters."
+                                                type="text">
+                                        </div>
+                                        <div input type="url" class="form-group">
+                                            <label>Link</label>
+                                            <textarea id="modal-link" class="form-control url" placeholder="URL to this API" data-placement="top" data-trigger="manual"></textarea>
+                                        </div>
+                                        <div class="form-group">
+                                            <label>Rating</label>
+                                            <select id="modal-rating" class="selectpicker">
+                                                <label>Rating</label>
+                                                <option></option>
+                                                <option>1</option>
+                                                <option>2</option>
+                                                <option>3</option>
+                                                <option>4</option>
+                                                <option>5</option>
+                                            </select>
+                                        </div>
+                                        <div class="form-group">
+                                            <button type="submit" id="addIt" class="btn btn-success pull-right">Add It!</button>
+                                            <p class="help-block pull-left text-danger hide" id="form-error">; The form is not valid. </p>
+                                        </div>
+                                    </form>
+                                </div>
+
+                            </div>
+
+                    </ul>
+                    </div>
+            </section>
+            <!-- Contact Form -->
+            <section id="four" class="wrapper style2 special">
+                <div class="inner">
+                    <header class="major narrow">
+                        <h2>Get in touch</h2>
+                        <p>We want to hear from you</p>
+                    </header>
+                    <form action="https://formspree.io/YOUREMAILHERE" method="POST">
+                        <div class="container 75%">
+                            <div class="row uniform 50%">
+                                <div class="6u 12u$(xsmall)">
+                                    <input name="name" placeholder="Name" type="text" />
+                                </div>
+                                <div class="6u$ 12u$(xsmall)">
+                                    <input name="email" placeholder="Email" type="email" />
+                                </div>
+                                <div class="12u$">
+                                    <textarea name="message" placeholder="Message" rows="4"></textarea>
+                                </div>
+                                <div class="6u 12u$(small)">
+                                    <input type="checkbox" id="copy" name="copy">
+                                    <label for="copy">Email me a copy of this message</label>
+                                </div>
+                                <div class="6u$ 12u$(small)">
+                                    <input type="checkbox" id="human" name="human" checked>
+                                    <label for="human">I am a human and not a robot</label>
+                                </div>
+                            </div>
+                        </div>
+                        <ul class="actions">
+                            <li>
+                                <input type="submit" class="special" value="Submit" />
+                            </li>
+                            <li>
+                                <input type="reset" class="alt" value="Reset" />
+                            </li>
+                        </ul>
+                    </form>
+                </div>
+            </section>
+            <!-- Footer -->
+            <footer id="footer">
+                <div class="inner">
+                    <ul class="icons">
+                        <li>
+                            <a href="#" class="icon fa-facebook">
+                                <span class="label">Facebook</span>
+                            </a>
+                        </li>
+                        <li>
+                            <a href="#" class="icon fa-twitter">
+                                <span class="label">Twitter</span>
+                            </a>
+                        </li>
+                        <li>
+                            <a href="#" class="icon fa-instagram">
+                                <span class="label">Instagram</span>
+                            </a>
+                        </li>
+                        <li>
+                            <a href="#" class="icon fa-linkedin">
+                                <span class="label">LinkedIn</span>
+                            </a>
+                        </li>
+                    </ul>
+                    <ul class="copyright">
+                        <li>&copy; Team #1</li>
+                        <li>Images:
+                            <a href="http://unsplash.com">Unsplash</a>.</li>
+                        <li>Design:
+                            <a href="http://templated.co">TEMPLATED</a>.</li>
+                    </ul>
+                </div>
+            </footer>
+
+            </div>
+</body>
+
+</html>
